@@ -22,7 +22,7 @@ from os import path
 import contextlib
 from io import BytesIO, StringIO
 
-from six import PY2, text_type
+from six import PY2, text_type, string_types
 
 # Errnos that we need.
 EEXIST = getattr(errno, 'EEXIST', 0)
@@ -39,12 +39,18 @@ SEP = "/"
 
 
 def os_path(canonicalpath):
-    return canonicalpath.replace(SEP, path.sep)
+    if isinstance(canonicalpath, string_types):
+        return canonicalpath.replace(SEP, path.sep)
+    else:
+        return canonicalpath
 
 
 def canon_path(nativepath):
     """Return path in OS-independent form"""
-    return nativepath.replace(path.sep, SEP)
+    if isinstance(nativepath, string_types):
+        return nativepath.replace(path.sep, SEP)
+    else:
+        return nativepath
 
 
 def relative_uri(base, to):
